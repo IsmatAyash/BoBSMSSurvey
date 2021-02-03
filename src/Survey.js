@@ -1,151 +1,88 @@
 import React, { useState, useContext } from "react";
 import {
+  Container,
+  Form,
+  Button,
+  Segment,
   Header,
   Image,
-  Button,
-  Checkbox,
-  Form,
-  Radio,
-  Select,
-  Container,
-  Segment,
-  Dropdown,
 } from "semantic-ui-react";
 import FirstPart from "./components/FirstPart";
+import { ToastContainer } from "react-toastify";
 import { DataContext } from "./DataContext";
+import SecondPart from "./components/SecondPart";
+import uuid from "react-uuid";
 
 const Survey = () => {
-  const [radio, setRadio] = useState("");
   const { data, setData } = useContext(DataContext);
-
-  const handleChange = (e, { name, value }) => {
-    console.log(name, value);
-    setData({ ...data, [name]: value, radio: value });
-    // setQns({ ...qns, [name]: value });
-  };
+  const [sme, setSme] = useState({ smeid: uuid() });
+  const [radio, setRadio] = useState("");
+  const [togs, setTogs] = useState({
+    delSrv: false,
+    onlSrv: false,
+    dealWithBob: false,
+  });
 
   const handleInput = ({ name, value }) => {
-    console.log(name, value);
-    setData({ ...data, [name]: value });
+    setSme({ ...sme, [name]: value });
   };
+
+  const handleChange = (e, { name, value }) => {
+    setRadio({ ...radio, [name]: value });
+    setSme({ ...sme, [name]: value });
+  };
+
+  const toggle = (name, value) => {
+    console.log(value);
+    setTogs({ ...togs, [name]: !value });
+    setSme({ ...sme, [name]: !value });
+  };
+
+  console.log("SMEs", sme);
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log({ data });
+    console.log("SME", sme);
+    // const smesRef = firebase.database().ref("smes");
+    // setData({
+    //   ...data,
+    //   isSubmitted: true,
+    //   busName: sme.busName,
+    //   smeid: sme.smeid,
+    // });
+    // smesRef.push(sme);
+    // toast.success(
+    //   "Business name data and details posted successfully, please start the survey"
+    // );
   };
 
-  const friendOptions = [
-    {
-      key: "Jenny Hess",
-      text: "Jenny Hess",
-      value: "Jenny Hess",
-      image: { avatar: true, src: "/images/avatar/small/jenny.jpg" },
-    },
-    {
-      key: "Elliot Fu",
-      text: "Elliot Fu",
-      value: "Elliot Fu",
-      image: { avatar: true, src: "/images/avatar/small/elliot.jpg" },
-    },
-    {
-      key: "Stevie Feliciano",
-      text: "Stevie Feliciano",
-      value: "Stevie Feliciano",
-      image: { avatar: true, src: "/images/avatar/small/stevie.jpg" },
-    },
-  ];
-
-  const options = [
-    { key: "m", text: "Male", value: "male" },
-    { key: "f", text: "Female", value: "female" },
-    { key: "o", text: "Other", value: "other" },
-  ];
+  console.log(data);
   return (
     <Container>
+      <ToastContainer />
       <Segment color="teal">
         <Header as="h2" icon textAlign="center">
           <Image centered size="massive" src="/logot.png" />
           <Header.Content>SME Business Survey</Header.Content>
-        </Header>{" "}
+          <Header.Subheader style={{ color: "blue", fontSize: 20 }}>
+            {`Welcome Messrs ${data.busName}`}
+          </Header.Subheader>
+        </Header>
+
         <Form onSubmit={handleSubmit}>
-          <FirstPart onChange={handleChange} onInput={handleInput} />
-          <Form.Group inline>
-            <Form.Field
-              name="quantity"
-              control={Radio}
-              label="One"
-              value="1"
-              checked={radio === "1"}
-              onChange={handleChange}
-            />
-            <Form.Field
-              name="quantity"
-              control={Radio}
-              label="Two"
-              value="2"
-              checked={radio === "2"}
-              onChange={handleChange}
-            />
-            <Form.Field
-              name="gender"
-              control={Select}
-              options={options}
-              placeholder="Gender"
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Field
-            name="gender"
-            control={Select}
-            label="Gender"
-            options={options}
-            placeholder="Gender"
+          <SecondPart
+            togs={togs}
+            onSubmit={handleSubmit}
+            onToggle={toggle}
             onChange={handleChange}
+            onInput={handleInput}
+            radio={radio}
           />
-          <Form.Field>
-            <label>Last Name</label>
-            <input
-              placeholder="Last Name"
-              name="lastName"
-              onChange={e => handleInput(e.currentTarget)}
-            />
-          </Form.Field>
-          <Form.Group inline>
-            <Form.Field>
-              <Radio
-                label="Choose this"
-                name="radioGroup"
-                value="this"
-                checked={radio === "this"}
-                onChange={handleChange}
-              />
-            </Form.Field>
-            <Form.Field
-              name="gender"
-              control={Select}
-              options={options}
-              placeholder="Gender"
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Field>
-            <Radio
-              label="Or that"
-              name="radioGroup"
-              value="that"
-              checked={radio === "that"}
-              onChange={handleChange}
-            />
-          </Form.Field>
-          <Form.Field>
-            <Checkbox
-              name="agree"
-              label="I agree to the Terms and Conditions"
-            />
-          </Form.Field>
           <Button type="submit">Submit</Button>
         </Form>
       </Segment>
+      {/* {!data.isSubmitted && !data.busName && <FirstPart />}
+      {data.isSubmitted && data.busName && <SecondPart />} */}
     </Container>
   );
 };
