@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Select, Radio, Segment } from "semantic-ui-react";
-import { textBoxes, banks, acctype } from "./SecondPartTexts.js";
+import { textBoxes, banks, acctype } from "./SecondPartTexts";
 import RadioButton from "./RadioButton";
 
 const SecondPart = ({ togs, onToggle, onInput, onChange, radio }) => {
@@ -82,7 +82,6 @@ const SecondPart = ({ togs, onToggle, onInput, onChange, radio }) => {
           />
         </Form.Field>
       </Form.Group>
-      <Segment color="orange"></Segment>
     </Segment>
   );
 };

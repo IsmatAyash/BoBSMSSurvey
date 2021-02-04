@@ -8,8 +8,6 @@ function App() {
   const [data, setData] = useState({
     isSubmitted: false,
     busName: "",
-    smeid: "",
-    timestamp: "",
   });
 
   const value = useMemo(() => ({ data, setData }), [data, setData]);
